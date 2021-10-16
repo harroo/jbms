@@ -121,6 +121,8 @@ int main (int argc, char** argv) {
 			resl.push_back("<title>JBMS</title></head>");
 			resl.push_back("<body style=\"background-color:Black;color:White;\">");
 
+			resl.push_back("<a href=\""+page+"/..\">..</a><br>");
+
 			for (auto &s : fls) {
 
 				std::cout << s << std::endl;
