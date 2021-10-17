@@ -24,6 +24,15 @@ void Abort (std::string a) {
 	exit(-1);
 }
 
+bool isdir (std::string s) {
+
+	struct stat st;
+	if (stat(s.c_str(), &st) == 0)
+		if (st.st_mode & S_IFDIR)
+			return true;
+	return false;
+}
+
 int main (int argc, char** argv) {
 
 	std::cout << "Welcome to Joe-Bob's Media Server..." << std::endl;
@@ -105,7 +114,15 @@ int main (int argc, char** argv) {
 
 			std::string dn;
 			if (page == "/") dn = "." + page + "*";
-			else dn = "." + page + "/*";
+			else {
+				dn = "." + page;
+
+				if (!isdir(page)) {
+			
+					
+
+				} else dn += "/*";
+			}
 
 			glob_t gr;
 			glob(dn.c_str(), GLOB_TILDE, NULL, &gr);
@@ -127,13 +144,11 @@ int main (int argc, char** argv) {
 
 				std::cout << s << std::endl;
 
-				struct stat st;
-				if (stat(s.c_str(), &st) == 0)
-					if (st.st_mode & S_IFDIR) {
+				if (isdir(s)) {
 
-						resl.push_back("<a href=\""+s+"\">"+s+"</a><br>");
-						continue;
-					}
+					resl.push_back("<a href=\""+s+"\">"+s+"</a><br>");
+					continue;
+				}
 				
 				resl.push_back(s + "<br>");
 			}
