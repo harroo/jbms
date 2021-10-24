@@ -54,6 +54,18 @@ std::string urlDecode(std::string str){
     return ret;
 }
 
+std::vector<std::string> split (std::string s, char c) {
+
+	std::vector<std::string> v;
+	std::stringstream ss(s);
+	std::string t;
+
+	while (std::getline(ss, t, c))
+		v.push_back(t);
+
+	return v;
+}
+
 int main (int argc, char** argv) {
 
 	std::cout << "Welcome to Joe-Bob's Media Server..." << std::endl;
@@ -69,10 +81,11 @@ int main (int argc, char** argv) {
 	inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
 	while (bind(listSock, (sockaddr*)&hint, sizeof(hint)) == -1) {
 
-		std::cout << "Failed to bind listSock! Attempting again in 5 seconds.." << std::endl;
+		std::cout << "Failed to bind listSock! Attempting again in 2 seconds.." << std::endl;
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
+		std::this_thread::sleep_for(std::chrono::seconds(2));
 	}
+	std::cout << "Bound successfully!" << std::endl;
 
 	if (listen(listSock, SOMAXCONN) == -1)
 		Abort("Failed to mark listSock for listening!");
@@ -172,7 +185,17 @@ int main (int argc, char** argv) {
 
 				//if (isdir(s)) {
 
-					resl.push_back("<a href=\""+s+"\">"+s+"</a><br>");
+					if (s.find(".png") != std::string::npos ||
+						s.find(".jpg") != std::string::npos ||
+						s.find(".jpeg") != std::string::npos ||
+						s.find(".gif") != std::string::npos ||
+						s.find(".webp") != std::string::npos
+					) {
+
+						resl.push_back("<img src=\""+s+"\" href=\""+s+"\"><br>");
+
+					} else
+						resl.push_back("<a href=\""+s+"\">"+s+"</a><br>");
 				//	continue;
 				//}
 
@@ -195,4 +218,3 @@ int main (int argc, char** argv) {
 
 	return 0;
 }
-
